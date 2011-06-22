@@ -1,0 +1,62 @@
+== AppMobi.toolkit.ui
+
+AppMobi.toolkit.ui is a UI library for building mobile apps
+
+== About
+
+We've had a lot of requests for a UI framework.  There are a bunch of frameworks, but cross platform mobile performance is not the best.  Some work great on iOS, but lack performance on android.  We wanted to create a lightweight framework that is simple for users.  We do not want you to be writing crazy HTML, JavaScript, or CSS.  
+
+
+== How to use AppMobi.toolkit.ui
+
+To use AppMobi.toolkit.ui, you need to include the javascript files.  We suggest using appMobiUI.min.js which has all the necesary files, otherwise include the source for all of them, 
+along with the CSS.
+
+We have three special registered div blocks for your layout based off id's.  They are the navbar, content, and toolbar. 
+
+* navbar - this is the top navbar.  You can add additional buttons, turn other events on/off on clicks if you need.  We handle the back button and the title for you.
+
+* content - this is the content area.  You do not need to add anything here.  All page divs will be added here.  If you put a div in there, it will be shown first.
+
+    Each div inside will need the class "panel".  AppMobi.toolkit.ui will search for all elements with that classname and add them automatically.
+	
+* toolbar - this is the bottom toolbar.  You can put your navigation buttons here.  We reset the history queue when you switch the navigation buttons.
+
+
+== Notes
+
+* To add divs to the content, simply set the class to "panel".  This is a special css class that we search for at startup.
+ 
+* AppMobi.toolkit.scroller is added automatically, along with AppMobi.toolkit.appMobiSelect, ApppMobi.toolkit.appMobiPassword, and AppMobi.toolkit.css3animate.
+
+* Linking to pages - You can link two ways.  You can link to a file by setting the URL, which will load via AJAX.  Or you can set the href property to "#div_id"
+    <a href="#login">Login</a>
+	
+* Ajax - using AppMobi, you can do cross domain requests.  Right now, it will always load the page.  You can implement your own caching, etc.  We do NOT crawl links to add them into the history queue, etc.  When a page is loaded, you are repsonsible for the content being wired properly.
+
+* To open links in a new window, set the target property
+    <a href="http://www.appmobi.com" target="_blank">AppMobi</a>
+
+* We handle history and transitions.  You can select from six transitions by setting the data-transition property.  The default is slide.
+    <a href="#login" data-transition="slide">Login</a>  //slide left/right
+	<a href="#login" data-transition="up">Login</a>  //slide up/down
+	<a href="#login" data-transition="down">Login</a>  //slide down/up
+	<a href="#login" data-transition="flip">Login</a>  //Flip the page
+	<a href="#login" data-transition="fade">Login</a>  //Fade in/out
+	<a href="#login" data-transition="pop">Login</a>  //Pop in/out
+
+* To update content, you must call the function updateContentDiv(_id_,_content_);
+    <script>AMUi.updateContentDiv("login","New Login HTML");
+	
+  where AMUi is a new AppMobi toolkit ui 
+    var AMUi = new AppMobi.toolkit.ui();
+	
+* To dynamically add a new div, you can call the function addContentDiv(_id_,_content_);
+    <script>AMUi.addContentDiv("newdiv","This is some new html");
+	
+   where AMUi is a new AppMobi toolkit ui 
+     var AMUi = new AppMobi.toolkit.ui();	
+
+* To initiate a page transition, you can call the function loadContent(_id_,clearHistory,backbutton,transition)
+    <scritp>AMUi.loadContent("my_id",false,false,"pop");
+          		  

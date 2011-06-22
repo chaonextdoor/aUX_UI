@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+<head>
+<title>Your New Application</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 
+
+
+<script src="appMobiCss3animate.js"></script>
+<script src="appMobiSelectBox.js"></script>
+<script src="appMobiPasswordBox.js"></script>
+<script src="appMobiUI.js"></script>
+<script src="appMobiScroll.js"></script>
+<script type="text/javascript">
+	/* This function runs once the page is loaded, but appMobi is not yet active */
+	var init = function() {
+		
+	};
+	window.addEventListener("load", init, false);
+
+
+	/* This code prevents users from dragging the page */
+	var preventDefaultScroll = function(event) {
+		event.preventDefault();
+		window.scroll(0, 0);
+		return false;
+	};
+	document.addEventListener('touchmove', preventDefaultScroll, false);
+
+	/* This code is used to run as soon as appMobi activates */
+	var AMUi="";
+	var onDeviceReady = function() {
+		//alert("Device Ready");
+		
+	     AppMobi.device.hideSplashScreen();
+		
+		AppMobi.display.useViewport(320, 480);
+		AMUi=new AppMobi.toolkit.ui();
+		AMUi.addContentDiv("mytest");	
+	};
+	document.addEventListener("appMobi.device.ready", onDeviceReady, false);
+	function loadInfo(what)
+	{
+	   if(what)
+		  AMUi.loadContent(AppMobi.webRoot+"info.html",1);
+	   else
+	      AMUi.loadContent(AppMobi.webRoot+"page3.html",1);
+	}
+	function test(e)
+	{
+	console.log(e);
+	}
+</script>
+<link rel="stylesheet" type="text/css" href="appMobiUI.css" /> 
+<style>
+	h3{text-align:center; font-size:35px;}
+	ul.iconLinks li{font-size:12px; font-weight:normal;}
+</style>
+</head>
+<body>
+
+
+<div id="toolbar">
+	<a href="#cloudList" data-transition="test" ><img src="images/magnifier.png" /></a> 
+	<a href="#cloudDefinition" ><img src="images/document.png" /></a>
+	<a href="#info"><img src="images/info.png" /></a>
+	<a href="#mytest"><img src="images/info.png" /></a>
+</div>
+
+<div title='Main Page' id="main" class="panel" selected="true">
+<p><b>Partly Cloudy</b> is a demonstration of the appMobiUI mobile app layout framework. It is designed to allow for rapid mobile application layout.</p>
+<a href="#cloudDefinition">Continue</a>
+</div> 
+
+<div id="cloudDefinition" title="About Clouds" class="panel">
+	<h3>All About Clouds</h3>	
+	<p><img src="images/clouds/300px-Cloud_poster.png" /></p>
+	<p>Clouds are formed when water evaporates into vapor from oceans, lakes, and ponds or by evapotranspiration over Earth's land surface and rises up into colder areas of the atmosphere due	to convective, orographic, or frontal lifting. The water vapor attaches itself to condensation nuclei which could be anything from dust to microscopic particles of salt and debris. Once the vapor has been cooled to saturation, the cloud becomes visible. All weather producing clouds form in the troposphere, the lowest major layer of the atmosphere. However very small amounts of water vapor can be found higher up in the stratosphere and mesosphere and may condense into very thin clouds if the air temperatures are sufficiently cold.</p>
+	<p>Tropospheric clouds can be divided into three main categories based upon the Latin root words which refer to the process of formation and physical structure of the clouds. The first of the three is Cirrus, which has only one genus and therefore shares the same name. It is in the high altitude range and occurs mostly in the form of filaments. The other two are Stratus that are mostly sheet-like in structure, and Cumulus that appear heaped, rolled, and/or rippled. Stratus and Cumulus occur in the high, middle, and low levels of the troposphere, so each of these categories have several cloud genera.</p>
+	<p>A total of ten cloud genera are derived by cross-classification of the stratus and cumulus categories into high (prefix cirro-), middle (prefix alto)-, low, and low to middle with some vertical development for a subtotal of eight main types. To these are added cirrus which is always high, and cumulonimbus which has its own augmented height range characteristics as a cloud of considerable vertical development. Although most cumulus shows only limited vertical development, the species cumulus congestus can be classified as having considerable vertical extent. Congestus tops are usually higher than nimbostratus, but not as high as cumulonimbus.[2] Prefixes for cloud genera belonging to height ranges other than high and middle are either absent or refer to characteristics other than the height range.</p>
+	<p>The essentials of the modern nomenclature system for tropospheric clouds were proposed by Luke Howard, a British manufacturing chemist and an amateur meteorologist with broad interests in science, in an 1802 presentation to the Askesian Society. Since 1890, clouds are classified and illustrated in cloud atlases.</p>
+	<p>Clouds that form above the troposphere are not given Latin names. Stratospheric clouds are classified alpha-numerically according to their chemical makeup. Mesospheric clouds are classified alpha-numerically according to physical structure.</p>
+	<p>Information on this page is from <a href="http://en.wikipedia.org/wiki/List_of_cloud_types" target="_blank">http://en.wikipedia.org/wiki/List_of_cloud_types</a></p>
+</div>
+
+
+
+<div id="cloudList" title='5 Main Cloud Types' class="panel">
+	<ul>		
+		<li><a href="#cirrus" data-transition="up" >Cirrus</a></li>
+		<li><a href="#cumulonimbus" data-transition="fade">Cumulonimbus</a></li>
+		<li><a href="#stratus" data-transition="pop" >Stratus</a></li>
+		<li><a href="#cumulus" data-transition="flip">Cumulus</a></li>
+		<li><a href="#fog" >Fog</a></li>
+		<li><a href="#login">Login</a></li>
+		<li><a href="info.html">XHR Test</a></li>
+	</ul>
+</div>
+
+<div id="login" title="Login" class="panel">
+	<p>This is some text to make it scroll</p>
+	<p>This is some text to make it scroll</p>
+	<p>This is some text to make it scroll</p>
+	<p>This is some text to make it scroll</p>
+	<p>This is some text to make it scroll</p>
+	<p>Password: <span><input type='password' id='pw'></span><p>
+	<p>State: <span>
+		<select id="test"><option>PA</option><option>MD</option></select>
+	</span><p>
+	<p>This is some text to make it scroll</p>
+	<p>This is some text to make it scroll</p>
+
+</div>
+
+<div id="cirrus" title="Cirrus" class="panel">
+	<p><img src="images/clouds/300px-CirrusField-color.jpg" /></p>
+	<a href="#login" data-transition="down">Test Login</a><br>
+	<p><b>Cirrus</b> clouds generally refer to atmospheric clouds that are characterized by thin, wisplike strands, often bunched into tufts, leading to their common (non-standard) name of mare's tail.[2] The word cirrus is Latin for curl, and cirrus clouds commonly resemble curly hair.[3][4] They range in color from white to a faint gray.[5] When these clouds are so extensive that they are virtually indistinguishable from one another, they form a sheet of cirrus called cirrostratus. Convection at high altitudes can produce another form of cirrus called cirrocumulus, a pattern of small cloud tufts which include droplets of supercooled water. Jet stream-powered cirrus clouds can grow so large that they stretch across continents, and yet they are still only a few kilometers deep.[6] In addition, they can form from the outflow of tropical cyclones or the anvils of cumulonimbus clouds. The term cirrus is also used for certain interstellar clouds composed of sub-micrometer sized dust grains.</p>
+	<p>For more information check out <a href="http://en.wikipedia.org/wiki/Cirrus_cloud" target="_blank">http://en.wikipedia.org/wiki/Cirrus_cloud</a></p>
+</div>
+
+<div id="cumulonimbus" title="Cumulonimbus" class="panel">
+	<p><img src="images/clouds/300px-CumulonimbusFlorida.jpg" /></p>
+	<p><b>Cumulonimbus</b> is a low to middle level cloud with considerable vertical development (family D2) that is tall, dense, and involved in thunderstorms and other inclement weather. Cumulonimbus originates from Latin: Cumulus "accumulated" and nimbus "rain". It is a result of atmospheric instability. These clouds can form alone, in clusters, or along a cold front in a squall line. They create lightning through the heart of the cloud. Cumulonimbus clouds form from cumulus clouds (namely from cumulus congestus) and can further develop into a supercell, a severe thunderstorm with special features.</p>
+	<p>For more information check out <a href="http://en.wikipedia.org/wiki/Cumulonimbus" target="_blank">http://en.wikipedia.org/wiki/Cumulonimbus</a></p>
+</div>
+
+<div id="stratus" title="Stratus" class="panel">
+	<p><img src="images/clouds/300px-Stratus-Opacus-Uniformis.jpg" /></p>
+	<p>A <b>Stratus</b> cloud is a cloud belonging to a class characterized by horizontal layering with a uniform base, as opposed to convective clouds that are as tall or taller than wide (these are termed cumulus clouds). More specifically, the term stratus is used to describe flat, hazy, featureless clouds of low altitude varying in color from dark gray to nearly white. Stratus clouds may produce a light drizzle or snow. A "cloudy day" usually features a sky filled with stratus clouds obscuring the disk of the sun. These clouds are essentially above-ground fog formed either through the lifting of morning fog or when cold air moves at low altitudes over a region.</p>
+	<p>For more information check out <a href="http://en.wikipedia.org/wiki/Stratus_cloud" target="_blank">http://en.wikipedia.org/wiki/Stratus_cloud</a></p>
+</div>
+
+<div id="cumulus" title="Cumulus" class="panel">
+	<p><img src="images/clouds/300px-GoldenMedows.jpg" /></p>
+	<p><b>Cumulus</b> clouds are a type of cloud with noticeable vertical development and clearly defined edges. Cumulus means "heap" or "pile" in Latin. They are often described as "puffy" or "cotton-like" in appearance. Cumulus clouds may appear alone, in lines, or in clusters. Cumulus clouds are often precursors of other types of clouds, such as cumulonimbus, when influenced by weather factors such as instability, moisture, and temperature gradient. Cumulus clouds are part of the larger category of cumuliform clouds, which include cumulus, cumulus congestus, and cumulonimbus clouds, among others.[1] The most intense cumulus and cumulonimbus clouds may be associated with severe weather phenomena such as hail, waterspouts and tornadoes.</p>
+	<p>For more information check out <a href="http://en.wikipedia.org/wiki/Cumulus" target="_blank">http://en.wikipedia.org/wiki/Cumulus</a></p>
+</div>
+
+<div id="fog" title="Fog" class="panel">
+	<p><img src="images/clouds/250px-San_francisco_in_fog_with_rays.jpg" /></p>
+	<p><b>Fog</b> is a collection of water droplets or ice crystals suspended in the air at or near the Earth's surface. While fog is a type of a cloud, the term "fog" is typically distinguished from the more generic term "cloud" in that fog is low-lying, and the moisture in the fog is often generated locally (such as from a nearby body of water, like a lake or the ocean, or from nearby moist ground or marshes).</p>
+	<p>Fog is distinguished from mist only by its density, as expressed in the resulting decrease in visibility: Fog reduces visibility to less than 1 km (5/8 statute mile), whereas mist reduces visibility to no less than 1 km (5/8 statute mile).[3] For aviation purposes in the UK, a visibility of less than 2 km but greater than 999 m is considered to be mist if the relative humidity is 95% or greater - below 95% haze is reported.[citation needed]</p>
+	<p>For more information check out <a href="http://en.wikipedia.org/wiki/Fog" target="_blank">http://en.wikipedia.org/wiki/Fog</a></p>
+</div>
+
+<div id="searchForm" title="Search" class="panel">
+	<p>[ Place Holder For Search Page]</p>
+</div>
+
+<div id="info" title="More Information" class="panel">
+	<p>All information and images were sourced from <a href="http://en.wikipedia.org/" target="_blank">Wikipedia.org</a></p>
+
+	<h3>Free Icon Sets</h3>
+	<ul class="iconLinks">		
+		<li><a href="http://blog.twg.ca/2009/09/free-iphone-toolbar-icons/" target="_blank">Icons by The Work Group</a></li>
+		<li><a href="http://glyphish.com/" target="_blank">Icons by Glyphish.com</a></li>
+		<li><a href="http://www.pixelpressicons.com/?p=108" target="_blank">Icons by Pixelpressicons.com</a></li>
+	</ul>
+</div>
+
+<div id="mytest" title="mytest">
+
+	This is a test of adding later
+</div>
+
+</body>
+</html>
