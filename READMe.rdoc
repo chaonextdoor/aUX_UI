@@ -22,6 +22,12 @@ We have three special registered div blocks for your layout based off id's.  The
 	
 * toolbar - this is the bottom toolbar.  You can put your navigation buttons here.  We reset the history queue when you switch the navigation buttons.
 
+== Known Issues
+
+There are some bugs with transition states that can cause a page to get "lost".
+
+The default scroller will scroll all content, so trying to add a button bar will cause issues. 
+
 
 == Notes
 
@@ -59,4 +65,5 @@ We have three special registered div blocks for your layout based off id's.  The
 
 * To initiate a page transition, you can call the function loadContent(_id_,clearHistory,backbutton,transition)
     <scritp>AMUi.loadContent("my_id",false,false,"pop");
-          		  
+          		
+* Please see appMobiUI.css for additional button colors and ways to change the theme				
