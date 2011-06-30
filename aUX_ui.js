@@ -1,20 +1,16 @@
 /**
- * AppMobi.toolkit.ui - A User Interface library for creating
+ * aUX.webui - A User Interface library for creating
  * 
  * @copyright 2011 - AppMobi
  * @author IDM
  */
 
-if (!window.AppMobi)
-	AppMobi = {};
-if (!AppMobi.toolkit)
-	AppMobi.toolkit = {};
-AppMobi.domFired=false;
-document.addEventListener("DOMContentLoaded",function(){AppMobi.domFired=true;},false);
-AppMobi.toolkit.ui = (function() {
+if (!window.aUX)
+	aUX = {};
+aUX.domFired=false;
+document.addEventListener("DOMContentLoaded",function(){aUX.domFired=true;},false);
+aUX.ui = (function() {
 
-	var translateOpen = 'm11' in new WebKitCSSMatrix() ? "3d(" : "(";
-	var translateClose = 'm11' in new WebKitCSSMatrix() ? ",0)" : ")";
 	var toolbar = "";
 	var content = "";
 	var navbar = "";
@@ -25,17 +21,20 @@ AppMobi.toolkit.ui = (function() {
 	var activeDiv = "";
 	var homeDiv = "";
 	var screenWidth = "";
-	var css3animate = AppMobi.toolkit.css3Animate;
-	var passwordBox = new AppMobi.toolkit.appMobiPassword();
-	var selectBox = new AppMobi.toolkit.appMobiSelect();
+	var css3animate = aUX.web.css3Animate;
+	var passwordBox = new aUX.web.appMobiPassword();
+	var selectBox = new aUX.web.appMobiSelect();
 	var ajaxUrl = "";
 	var transitionType = "slide";
 	var scrollingDivs = [];
 	var firstDiv = "";
 	var ui = function() {
 		// Init the page
-		if(!AppMobi.domFired) //bad hack - could put in bad loop, but tries to not fire ubntil DOMContentLoaded triggers
-		   return new ui();
+		if(!aUX.domFired)
+		{
+		   document.addEventListener("DOMContentLoaded",function(){return new ui();},false);
+		   return;
+		}
 		var that = this;
 		toolbar = $am("toolbar");
 		content = $am("content");
@@ -148,7 +147,7 @@ AppMobi.toolkit.ui = (function() {
 			selectBox.getOldSelects(tmp.id);
 			passwordBox.getOldPasswords(tmp.id);
 			if(addScroller){
-				scrollingDivs[tmp.id]=(AppMobi.toolkit.scroller(myDiv, {
+				scrollingDivs[tmp.id]=(aUX.web.scroller(myDiv, {
 					scrollBars : true,
 					verticalScroll : true,
 					horizontalScroll : false,

@@ -1,18 +1,15 @@
 /**
- * AppMobi.toolkit.scroller - a scrolling library for AppMobi Apps Copyright
- * 2011 - AppMobi Author: IDM
- * 
- * @TODO - add 'load more' to the bottom
- * @TODO - fix positioning of scrollbars based off content related to top/bottom
+ * aUX.web.scroller - a scrolling library for AppMobi Apps 
+ * Copyright 2011 - AppMobi 
  */
 
-if(!window.AppMobi)
-	AppMobi={};
+if(!window.aUX)
+	aUX={};
 
-if (!AppMobi.toolkit)
-	AppMobi.toolkit = {};
+if (!aUX.web)
+	aUX.web = {};
 
-AppMobi.toolkit.scroller = (function() {
+aUX.web.scroller = (function() {
 	var translateOpen = 'm11' in new WebKitCSSMatrix() ? "3d(" : "(";
 	var translateClose = 'm11' in new WebKitCSSMatrix() ? ",0)" : ")";
 	var touchStarted=false;

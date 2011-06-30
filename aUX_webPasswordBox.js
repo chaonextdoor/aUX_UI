@@ -1,18 +1,17 @@
 /*
- * AppMobi.toolkit.appMobiPasswordbox
+ * aUX.web.appMobiPasswordbox
  * @copyright 2011 - AppMobi
- * @author IDM
  */
-if(!window.AppMobi)
-	AppMobi={};
-if (!AppMobi.toolkit)
-	AppMobi.toolkit = {};
-AppMobi.toolkit.appMobiPassword = function() {
+if(!window.aUX)
+	aUX={};
+if (!aUX.web)
+	aUX.web = {};
+aUX.web.appMobiPassword = function() {
 	this.oldPasswords = {};
 };
 
-AppMobi.toolkit.appMobiPassword.prototype = {
-	oldPasswords : {},
+aUX.web.appMobiPassword.prototype = {
+	oldPasswords : [],
 	showPasswordPlainText:false,
 	getOldPasswords : function(elID) {
 		var container = elID && document.getElementById(elID) ? document

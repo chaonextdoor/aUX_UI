@@ -33,7 +33,7 @@ The default scroller will scroll all content, so trying to add a button bar will
 
 * To add divs to the content, simply set the class to "panel".  This is a special css class that we search for at startup.
  
-* aUX_web.scroller is added automatically, along with aUX_web.appMobiSelect, aUX_web.appMobiPassword, and aUX_web.css3animate.
+* aUX_web.scroller is added automatically, along with aUX.web.appMobiSelect, aUX.web.appMobiPassword, and aUX.web.css3animate.
 
 * Linking to pages - You can link two ways.  You can link to a file by setting the URL, which will load via AJAX.  Or you can set the href property to "#div_id"
     <a href="#login">Login</a>
@@ -55,13 +55,13 @@ The default scroller will scroll all content, so trying to add a button bar will
     <script>AMUi.updateContentDiv("login","New Login HTML");
 	
   where AMUi is a new AppMobi toolkit ui 
-    var AMUi = new aUX.js();
+    var AMUi = new aUX.ui();
 	
 * To dynamically add a new div, you can call the function addContentDiv(_id_,_content_);
     <script>AMUi.addContentDiv("newdiv","This is some new html");
 	
    where AMUi is a new aUX object
-     var AMUi = new aUX.js();	
+     var AMUi = new aUX.ui();	
 
 * To initiate a page transition, you can call the function loadContent(_id_,clearHistory,backbutton,transition)
     <scritp>AMUi.loadContent("my_id",false,false,"pop");

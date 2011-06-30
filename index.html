@@ -7,20 +7,21 @@
 
 <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
 <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 
+<!--
 
-
-<script src="appMobiCss3animate.js"></script>
-<script src="appMobiSelectBox.js"></script>
-<script src="appMobiPasswordBox.js"></script>
-<script src="appMobiUI.js"></script>
-<script src="appMobiScroll.js"></script>
+<script src="aUX_webCss3animate.js"></script>
+<script src="aUX_webSelectBox.js"></script>
+<script src="aUX_webPasswordBox.js"></script>
+<script src="aUX_ui.js"></script>
+<script src="aUX_webScroll.js"></script>
+-->
+<script src="aUX_ui.min.js"></script>
 <script type="text/javascript">
 	/* This function runs once the page is loaded, but appMobi is not yet active */
 	var init = function() {
 		
 	};
 	window.addEventListener("load", init, false);
-
 
 	/* This code prevents users from dragging the page */
 	var preventDefaultScroll = function(event) {
@@ -38,7 +39,7 @@
 	     AppMobi.device.hideSplashScreen();
 		
 		AppMobi.display.useViewport(320, 480);
-		AMUi=new AppMobi.toolkit.ui();
+		AMUi=new aUX.ui();
 		AMUi.addContentDiv("mytest");	
 	};
 	document.addEventListener("appMobi.device.ready", onDeviceReady, false);
@@ -54,7 +55,7 @@
 	console.log(e);
 	}
 </script>
-<link rel="stylesheet" type="text/css" href="appMobiUI.css" /> 
+<link rel="stylesheet" type="text/css" href="aUX_ui.css" /> 
 <style>
 	h3{text-align:center; font-size:35px;}
 	ul.iconLinks li{font-size:12px; font-weight:normal;}
