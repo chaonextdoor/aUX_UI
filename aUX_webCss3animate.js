@@ -83,10 +83,8 @@ aUX.web.css3Animate = (function() {
 		}
 		if (options["callback"]) {
 
-			if (!webkitTransitionCallbacks[this.el.id])
-				webkitTransitionCallbacks[this.el.id] = [];
-			webkitTransitionCallbacks[this.el.id].push(options["callback"]);
-			this.el.moving = true;
+			this.el.callback=options["callback"];
+			this.el.moving=true;
 		}
 	};
 
@@ -96,10 +94,9 @@ aUX.web.css3Animate = (function() {
 		if (!event.target.moving)
 			return;
 		event.target.moving = false;
-		if (webkitTransitionCallbacks[event.target.id]
-				&& webkitTransitionCallbacks[event.target.id].length > 0) {
-			var cb = webkitTransitionCallbacks[event.target.id].shift();
-			cb();
+		if (that.callback&&typeof(that.callback=="function")) {
+			that.callback();
+			that.callback="";
 		}
 	}
 	return css3Animate;

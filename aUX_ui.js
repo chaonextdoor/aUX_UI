@@ -164,7 +164,7 @@ aUX.ui = (function() {
 					continue;
 				anchors[i].oldhref = anchors[i].href;
 				anchors[i].oldhash = anchors[i].hash;
-				anchors[i].href = "javascript:;"
+				anchors[i].href = "javascript:;";
 				anchors[i].oldonclick = anchors[i].onclick;
 				anchors[i].resetHistory = reset;
 				anchors[i].onclick = function() {
@@ -203,7 +203,7 @@ aUX.ui = (function() {
 							this.resetHistory, 0, transition);
 					if (this.oldonclick)
 						this.oldonclick();
-				}
+				};
 			}
 
 		},
@@ -256,7 +256,7 @@ aUX.ui = (function() {
 					//fix scroller
 					if(scrollingDivs[what.id])
 					{
-						scrollingDivs[what.id].scrollTo({x : 0,y : 0})
+						scrollingDivs[what.id].scrollTo({x : 0,y : 0});
 					}
 					var oldHistory = [];
 					if (newTab) {
@@ -398,7 +398,7 @@ aUX.ui = (function() {
 							x : 0,
 							y : 0,
 							time : "1ms"
-						})
+						});
 					}
 				});
 				css3animate(currDiv, {
@@ -448,7 +448,7 @@ aUX.ui = (function() {
 							x : 0,
 							y : 0,
 							time : "1ms"
-						})
+						});
 					}
 				});
 				css3animate(currDiv, {
@@ -507,7 +507,7 @@ aUX.ui = (function() {
 							x : 0,
 							y : 0,
 							time : "1ms"
-						})
+						});
 					}
 				});
 				css3animate(currDiv, {
@@ -555,7 +555,7 @@ aUX.ui = (function() {
 							x : 0,
 							y : 0,
 							time : "1ms"
-						})
+						});
 					}
 				});
 				currDiv.style.opacity = 0;
@@ -605,7 +605,7 @@ aUX.ui = (function() {
 							x : 0,
 							y : 0,
 							time : "1ms"
-						})
+						});
 					}
 				});
 				css3animate(currDiv, {
