@@ -32,84 +32,97 @@ aUX.ui = (function() {
 		// Init the page
 		if(!aUX.domFired)
 		{
-		   document.addEventListener("DOMContentLoaded",function(){return new ui();},false);
+		   var that=this;
+		   document.addEventListener("DOMContentLoaded",function(){ that.launch();},false);
 		   return;
 		}
-		var that = this;
-		toolbar = $am("toolbar");
-		content = $am("content");
-		navbar = $am("navbar");
-		if (!toolbar) {
-			var toolbar = document.createElement("div");
-			toolbar.id = "toolbar";
-			toolbar.style.cssText = "display:none";
-		}
-		if (!navbar) {
-			navbar = document.createElement("div");
-			navbar.id = "navbar";
-			document.body.appendChild(navbar);
-		}
-		if (!content) {
-			content = document.createElement("div");
-			content.id = "content";
-			document.body.appendChild(content);
-		}
-		navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'
-				+ navbar.innerHTML;
-		backButton = $am("backButton");
-		backButton.className="button";
+		this.hasLaunched=true;
+		this.launch();
 		
-		backButton.onclick = function() {		
-			if (history.length > 0) {
-				var tmpEl = history.pop();
-				that.loadContent(tmpEl.target + "", 0, 1, tmpEl.transition);
-				transitionType = tmpEl.transition;
-				
-			}
-		};
-		backButton.style.visibility = "hidden";
-		titleBar = $am("pageTitle");
-		this.addContentDiv("AMUi_ajax", "");
-		var maskDiv = document.createElement("div");
-		maskDiv.id = "AMUI_mask";
-		maskDiv.className = "ui-loader ui-body-a ui-corner-all loading-mask";
-		maskDiv.innerHTML = "<span class='ui-icon ui-icon-loading spin'></span><h1>Loading Content</h1>";
-		maskDiv.zIndex = 20000;
-		maskDiv.style.display = "none";
-		document.body.appendChild(maskDiv);
-		document.addEventListener("appMobi.device.orientation.change",
-				that.updateOrientation, false);
-		this.updateAnchors(toolbar, 1);
-		this.updateAnchors(navbar);
-
-		var contentDivs = getElementsByClass(document, "panel", "div");
-		while (contentDivs.length > 0) {
-			var el = contentDivs.pop();
-			var tmp = el;
-			if (el.parentNode && el.parentNode.id != "content") {
-				// add it to the content div
-				el.parentNode.removeChild(el);
-				this.addDivAndScroll(tmp);
-			}
-
-		}
-		if (firstDiv) {
-			// Fix a bug in iOS where translate3d makes the content blurry
-			activeDiv=firstDiv;
-			window.setTimeout(function() {
-				//activeDiv = firstDiv;
-				css3animate(firstDiv, {
-					x : "100%",
-					time : "0ms"
-				});
-				if (activeDiv.title)
-					titleBar.innerHTML = activeDiv.title;
-			}, 100);
-			
-		}
 	};
 
+	
 	ui.prototype = {
+		hasLaunched:false,
+		launch:function(){
+			if(this.hasLaunched==false)
+			{
+				this.hasLaunched=true;
+				return;
+			}
+			var that = this;
+			toolbar = $am("toolbar");
+			content = $am("content");
+			navbar = $am("navbar");
+			if (!toolbar) {
+				var toolbar = document.createElement("div");
+				toolbar.id = "toolbar";
+				toolbar.style.cssText = "display:none";
+			}
+			if (!navbar) {
+				navbar = document.createElement("div");
+				navbar.id = "navbar";
+				document.body.appendChild(navbar);
+			}
+			if (!content) {
+				content = document.createElement("div");
+				content.id = "content";
+				document.body.appendChild(content);
+			}
+			navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'
+					+ navbar.innerHTML;
+			backButton = $am("backButton");
+			backButton.className="button";
+			
+			backButton.onclick = function() {		
+				if (history.length > 0) {
+					var tmpEl = history.pop();
+					that.loadContent(tmpEl.target + "", 0, 1, tmpEl.transition);
+					transitionType = tmpEl.transition;
+					
+				}
+			};
+			backButton.style.visibility = "hidden";
+			titleBar = $am("pageTitle");
+			this.addContentDiv("AMUi_ajax", "");
+			var maskDiv = document.createElement("div");
+			maskDiv.id = "AMUI_mask";
+			maskDiv.className = "ui-loader ui-body-a ui-corner-all loading-mask";
+			maskDiv.innerHTML = "<span class='ui-icon ui-icon-loading spin'></span><h1>Loading Content</h1>";
+			maskDiv.zIndex = 20000;
+			maskDiv.style.display = "none";
+			document.body.appendChild(maskDiv);
+			document.addEventListener("appMobi.device.orientation.change",
+					that.updateOrientation, false);
+			this.updateAnchors(toolbar, 1);
+			this.updateAnchors(navbar);
+
+			var contentDivs = getElementsByClass(document, "panel", "div");
+			while (contentDivs.length > 0) {
+				var el = contentDivs.pop();
+				var tmp = el;
+				if (el.parentNode && el.parentNode.id != "content") {
+					// add it to the content div
+					el.parentNode.removeChild(el);
+					this.addDivAndScroll(tmp);
+				}
+
+			}
+			if (firstDiv) {
+				// Fix a bug in iOS where translate3d makes the content blurry
+				activeDiv=firstDiv;
+				window.setTimeout(function() {
+					//activeDiv = firstDiv;
+					css3animate(firstDiv, {
+						x : "100%",
+						time : "0ms"
+					});
+					if (activeDiv.title)
+						titleBar.innerHTML = activeDiv.title;
+				}, 100);
+				
+			}
+		},
 		clearHistory:function(){
 			this.history=[];
 		},
