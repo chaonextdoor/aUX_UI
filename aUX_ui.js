@@ -80,7 +80,9 @@ aUX.ui = (function() {
 					that.loadContent(tmpEl.target + "", 0, 1, tmpEl.transition);
 					transitionType = tmpEl.transition;
 					
+					
 				}
+			
 			};
 			backButton.style.visibility = "hidden";
 			titleBar = $am("pageTitle");
@@ -131,6 +133,7 @@ aUX.ui = (function() {
 			if (!el)
 				return;
 			el.childNodes[0].innerHTML = content;
+			this.updateAnchors(el);
 		},
 		addContentDiv : function(el, content) {
 			var myEl = document.getElementById(el);
