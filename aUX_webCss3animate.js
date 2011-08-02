@@ -8,6 +8,8 @@ if(!aUX.web)
 	aUX.web={};
 aUX.web.css3Animate = (function() {
 
+	if(!window.WebKitCSSMatrix)
+	   return;
 	var translateOpen = 'm11' in new WebKitCSSMatrix() ? "3d(" : "(";
 	var translateClose = 'm11' in new WebKitCSSMatrix() ? ",0)" : ")";
 	var webkitTransitionCallbacks = {};
@@ -38,10 +40,10 @@ aUX.web.css3Animate = (function() {
 		if(!options["x"])
 			options["x"]=0;
 		if (options["previous"]) {
-			options.y += new WebKitCSSMatrix(
-					window.getComputedStyle(this.el).webkitTransform).f;
-			options.x += new WebKitCSSMatrix(
-					window.getComputedStyle(this.el).webkitTransform).e;
+			options.y += numOnly(new WebKitCSSMatrix(
+					window.getComputedStyle(this.el).webkitTransform).f);
+			options.x += numOnly(new WebKitCSSMatrix(
+					window.getComputedStyle(this.el).webkitTransform).e);
 		}
 		if(!options["origin"])
 		   options.origin="0% 0%";
