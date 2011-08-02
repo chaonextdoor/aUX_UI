@@ -10,6 +10,8 @@ if (!aUX.web)
 	aUX.web = {};
 
 aUX.web.scroller = (function() {
+	if(!window.WebKitCSSMatrix)
+	   return;
 	var translateOpen = 'm11' in new WebKitCSSMatrix() ? "3d(" : "(";
 	var translateClose = 'm11' in new WebKitCSSMatrix() ? ",0)" : ")";
 	var touchStarted=false;
@@ -140,9 +142,11 @@ aUX.web.scroller = (function() {
 						deltaY = -deltaY;
 						var newTop = this.startTop + deltaY;
 						var top = -newTop;
-
-						var prevTop = new WebKitCSSMatrix(window
-								.getComputedStyle(this.el).webkitTransform).f;
+						try{
+						var prevTop = numOnly(new WebKitCSSMatrix(window
+								.getComputedStyle(this.el).webkitTransform).f);
+						}
+						catch(prevTopE){var prevTop=0;}
 						scrollPoints.y = newTop;
 					}
 					if (this.horizontalScroll) {
@@ -150,9 +154,11 @@ aUX.web.scroller = (function() {
 						deltaX = -deltaX;
 						var newLeft = this.startLeft + deltaX;
 						var left = newLeft;
-
-						var prevLeft = -(new WebKitCSSMatrix(window
-								.getComputedStyle(this.el).webkitTransform).e);
+						try{
+						var prevLeft = -numOnly((new WebKitCSSMatrix(window
+								.getComputedStyle(this.el).webkitTransform).e));
+						}
+						catch(prevLeftE){var prevLeft=0;}
 						scrollPoints.x = left;
 
 					}
@@ -243,10 +249,10 @@ aUX.web.scroller = (function() {
 
 				if (event.touches.length == 1 && this.boolScrollLock == false) {
 					try {
-						this.startTop = new WebKitCSSMatrix(window
-								.getComputedStyle(eleScrolling).webkitTransform).f;
-						this.startLeft = new WebKitCSSMatrix(window
-								.getComputedStyle(eleScrolling).webkitTransform).e;
+						this.startTop = numOnly(new WebKitCSSMatrix(window
+								.getComputedStyle(eleScrolling).webkitTransform).f);
+						this.startLeft = numOnly(new WebKitCSSMatrix(window
+								.getComputedStyle(eleScrolling).webkitTransform).e);
 					} catch (e) {
 						this.startTop = 0;
 						this.startLeft = 0;
@@ -332,8 +338,8 @@ aUX.web.scroller = (function() {
 					newDist = newDist * (dist < 0 ? -1 : 1);
 					newTime = speed / deceleration;
 
-					var move = new WebKitCSSMatrix(window
-							.getComputedStyle(this.el).webkitTransform).f;
+					var move = numOnly(new WebKitCSSMatrix(window
+							.getComputedStyle(this.el).webkitTransform).f);
 					if (move < 0)
 						move = move - newDist;
 
@@ -359,8 +365,8 @@ aUX.web.scroller = (function() {
 					newDist = newDist * (dist < 0 ? -1 : 1);
 					newTime = speed / deceleration;
 
-					var move = new WebKitCSSMatrix(window
-							.getComputedStyle(this.el).webkitTransform).e;
+					var move = (new WebKitCSSMatrix(window
+							.getComputedStyle(this.el).webkitTransform).e);
 
 					if (move < 0)
 						move = move - newDist;
