@@ -54,7 +54,7 @@ The default scroller will scroll all content, so trying to add a button bar will
 * To update content, you must call the function updateContentDiv(_id_,_content_);
     <script>AMUi.updateContentDiv("login","New Login HTML");
 	
-  where AMUi is a new AppMobi toolkit ui 
+   where AMUi is a new AppMobi toolkit ui 
     var AMUi = new aUX.ui();
 	
 * To dynamically add a new div, you can call the function addContentDiv(_id_,_content_);
@@ -64,6 +64,20 @@ The default scroller will scroll all content, so trying to add a button bar will
      var AMUi = new aUX.ui();	
 
 * To initiate a page transition, you can call the function loadContent(_id_,clearHistory,backbutton,transition)
-    <scritp>AMUi.loadContent("my_id",false,false,"pop");
-          		
+    <scritp>AMUi.loadContent("my_id",false,false,"pop");</script>
+
+* To prevent a div from scrolling, set the property "scrolling" to "no" on the div
+    <div class="panel" scrolling="no">
+    </div>
+
+* To get the current active div/page
+    <script>AMUi.activeDiv //reference to the div</script>
+    <script>var activeId=AMUi.activeDiv.id</script>
+
+* To make the back button text static
+    <script>AMUi.backButtonText="Back...";</script>
+
+* To change the back button text dynamically
+    <script>AMUi.setBackButtonText("Go Back");</script>
+	
 * Please see aUX.css for additional button colors and ways to change the theme				

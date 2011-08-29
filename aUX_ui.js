@@ -18,7 +18,6 @@ aUX.ui = (function() {
 	var titleBar = "";
 	var remotePages = {};
 	var history = [];
-	var activeDiv = "";
 	var homeDiv = "";
 	var screenWidth = "";
 	var css3animate = aUX.web.css3Animate;
@@ -44,6 +43,8 @@ aUX.ui = (function() {
 	
 	ui.prototype = {
 		hasLaunched:false,
+		activeDiv:"",
+		backButtonText:"",
 		launch:function(){
 			if(this.hasLaunched==false)
 			{
@@ -79,8 +80,6 @@ aUX.ui = (function() {
 					var tmpEl = history.pop();
 					that.loadContent(tmpEl.target + "", 0, 1, tmpEl.transition);
 					transitionType = tmpEl.transition;
-					
-					
 				}
 			
 			};
@@ -112,15 +111,15 @@ aUX.ui = (function() {
 			}
 			if (firstDiv) {
 				// Fix a bug in iOS where translate3d makes the content blurry
-				activeDiv=firstDiv;
+				this.activeDiv=firstDiv;
 				window.setTimeout(function() {
 					//activeDiv = firstDiv;
 					css3animate(firstDiv, {
 						x : "100%",
 						time : "0ms"
 					});
-					if (activeDiv.title)
-						titleBar.innerHTML = activeDiv.title;
+					if (that.activeDiv.title)
+						titleBar.innerHTML = that.activeDiv.title;
 				}, 100);
 				
 			}
@@ -230,7 +229,7 @@ aUX.ui = (function() {
 					y : 0
 				});
 			}
-			css3animate(activeDiv, {
+			css3animate(this.activeDiv, {
 				x : "100%",
 				time : "0ms"
 			});
@@ -243,7 +242,7 @@ aUX.ui = (function() {
 				that.hideMask();
 				if (target.indexOf("#") == -1) {
 					// XML Request
-					if (activeDiv.id == "AMUi_ajax" && target == ajaxUrl)
+					if (this.activeDiv.id == "AMUi_ajax" && target == ajaxUrl)
 						return;
 					if (target.indexOf("http") == -1)
 						target = AppMobi.webRoot + target;
@@ -265,7 +264,7 @@ aUX.ui = (function() {
 					// load a div
 					what = target.replace("#", "");
 					what = $am(what);
-					if (what == activeDiv && !back)
+					if (what == this.activeDiv && !back)
 						return;
 
 					what.style.display = "block";
@@ -283,13 +282,13 @@ aUX.ui = (function() {
 						});
 					} else if (!back) {
 						history.push({
-							target : "#" + activeDiv.id,
+							target : "#" + this.activeDiv.id,
 							transition : transition
 						});
 
 					}
 					transitionType = transition;
-					var oldDiv = activeDiv;
+					var oldDiv = this.activeDiv;
 					var currWhat = what;
 
 					switch (transition) {
@@ -316,17 +315,17 @@ aUX.ui = (function() {
 						if (history.length > 0) {
 							var val = history[history.length - 1];
 							var el = $am(val.target.replace("#", ""));
-							backButton.innerHTML = "<div>"+el.title+"</div>";
+							this.setBackButtonText(el.title)
 						}
-					} else if (activeDiv.title)
-						backButton.innerHTML ="<div>"+ activeDiv.title+"</div>";
+					} else if (this.activeDiv.title)
+						this.setBackButtonText(this.activeDiv.title)
 					else
-						backButton.innerHTML = "<div>"+"Back"+"</div>";
+						this.setBackButtonText("Back");
 					if (what.title) {
 						titleBar.innerHTML = what.title;
 					}
 					if (newTab) {
-						backButton.innerHTML = firstDiv.title;
+						this.setBackButtonText(firstDiv.title)
 					}
 
 					if (history.length == 0) {
@@ -334,13 +333,20 @@ aUX.ui = (function() {
 						history = [];
 					} else
 						backButton.style.visibility = "visible";
-					activeDiv = what;
+					this.activeDiv = what;
 				}
 			} catch (e) {
 				console
 						.log("Error with loading content " + e + "  - "
 								+ target);
 			}
+		},
+		setBackButtonText:function(text)
+		{
+			if(this.backButtonText.length>0)
+			   backButton.innerHTML="<div>"+this.backButtonText+"</div>";
+			else
+				backButton.innerHTML="<div>"+text+"</div>";
 		},
 		showMask : function() {
 			$am("AMUI_mask").style.display = "block";
