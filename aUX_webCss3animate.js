@@ -25,12 +25,32 @@ aUX.web.css3Animate = (function() {
 		}
 		if(!this.el)
 			return;
+		var that=this;
 		if(!options)
 		{
 			alert("Please provide configuration options for animation of "+elID);
 			return;
 		}
 		this.el.addEventListener("webkitTransitionEnd", finishAnimation, false);
+		
+		if (options["callback"]) {
+			this.el.callback=options["callback"];
+			this.el.moving=true;
+			window.setTimeout(function(){
+				if(that.el.moving==true&&that.el.callback&&typeof(that.el.callback=="function")){
+				that.el.moving=false;
+				that.el.callback();
+				that.el.callback="";
+				}
+			},numOnly(options["time"])+50);
+		}
+		else {
+			this.el.callback=function(){}
+			this.el.moving=false;
+		}
+		
+		
+		
 		if (options["opacity"]) {
 			this.el.style.opacity = options["opacity"];
 
@@ -65,7 +85,6 @@ aUX.web.css3Animate = (function() {
 		
 		//check for percent or numbers
 		
-		
 		if(typeof(options.x)=="number"||(options.x.indexOf("%")==-1&&options.x.toLowerCase().indexOf("px")==-1&&options.x.toLowerCase().indexOf("deg")==-1))
 		   options.x=parseInt(options.x)+"px";
 		if(typeof(options.y)=="number"||(options.y.indexOf("%")==-1&&options.y.toLowerCase().indexOf("px")==-1&&options.y.toLowerCase().indexOf("deg")==-1))
@@ -82,20 +101,19 @@ aUX.web.css3Animate = (function() {
 		}
 		if (options["height"]) {
 			this.el.style.height = options["height"];
-		}
-		if (options["callback"]) {
-
-			this.el.callback=options["callback"];
-			this.el.moving=true;
-		}
+		}		
 	};
 
 	function finishAnimation(event) {
 		event.preventDefault();
 		var that = event.target;
+		
 		if (!event.target.moving)
 			return;
+		
 		event.target.moving = false;
+		
+		that.removeEventListener("webkitTransitionEnd",finishAnimation,true);
 		if (that.callback&&typeof(that.callback=="function")) {
 			that.callback();
 			that.callback="";

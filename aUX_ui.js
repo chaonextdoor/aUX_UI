@@ -8,6 +8,7 @@
 if (!window.aUX)
 	aUX = {};
 aUX.domFired=false;
+var isAppmobi=(window.AppMobi&&typeof(AppMobi)=="objcet")?true:false;
 document.addEventListener("DOMContentLoaded",function(){aUX.domFired=true;},false);
 aUX.ui = (function() {
 
@@ -32,7 +33,8 @@ aUX.ui = (function() {
 		if(!aUX.domFired)
 		{
 		   var that=this;
-		   document.addEventListener("DOMContentLoaded",function(){ that.launch();},false);
+		   
+		   document.addEventListener("DOMContentLoaded",function(){that.hasLaunched=true;that.launch();},false);
 		   return;
 		}
 		this.hasLaunched=true;
@@ -42,6 +44,29 @@ aUX.ui = (function() {
 
 	
 	ui.prototype = {
+		hasSplash:false,
+		setSplashScreen:function(url){
+			this.hasSplash=true;
+			var div=document.createElement("div");
+			div.id="aUX_splashcreen";
+			div.style.cssText="width:100%;height:100%;top:0;left;0;position:absolute;z-index:99999;margin:auto;";
+			div.innerHTML="<img src='"+url+"'>";
+			document.documentElement.appendChild(div);
+		},
+		hideSplash:function(){
+			if(this.hasSplash)
+			{
+				for(var i=0;i<document.documentElement.childNodes.length;i++)
+				{
+				   var el=document.documentElement.childNodes[i];
+				   if(el.id=="aUX_splashcreen")
+				   {
+				      el.parentNode.removeChild(el);
+					  break;
+					}
+				}
+			}   
+		},
 		hasLaunched:false,
 		activeDiv:"",
 		backButtonText:"",
@@ -70,8 +95,7 @@ aUX.ui = (function() {
 				content.id = "content";
 				document.body.appendChild(content);
 			}
-			navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'
-					+ navbar.innerHTML;
+			navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'+ navbar.innerHTML;
 			backButton = $am("backButton");
 			backButton.className="button";
 			
@@ -93,23 +117,27 @@ aUX.ui = (function() {
 			maskDiv.zIndex = 20000;
 			maskDiv.style.display = "none";
 			document.body.appendChild(maskDiv);
-			document.addEventListener("appMobi.device.orientation.change",
-					that.updateOrientation, false);
+			document.addEventListener("appMobi.device.orientation.change",that.updateOrientation, false);
+			var modalDiv=document.createElement("div");
+			modalDiv.id="AMUI_modal";
+			modalDiv.className="modal";
+			document.body.appendChild(modalDiv);
 			this.updateAnchors(toolbar, 1);
-			this.updateAnchors(navbar);
+			//this.updateAnchors(navbar);
 
-			var contentDivs = getElementsByClass(document, "panel", "div");
-			while (contentDivs.length > 0) {
-				var el = contentDivs.pop();
+			var contentDivs=document.querySelectorAll(".panel");
+			for(var i=0;i<contentDivs.length;i++){
+				var el = contentDivs[i];
 				var tmp = el;
+				if(tmp.getAttribute("selected"))
+					firstDiv=tmp;
 				if (el.parentNode && el.parentNode.id != "content") {
-					// add it to the content div
 					el.parentNode.removeChild(el);
 					this.addDivAndScroll(tmp);
 				}
-
 			}
 			if (firstDiv) {
+				
 				// Fix a bug in iOS where translate3d makes the content blurry
 				this.activeDiv=firstDiv;
 				window.setTimeout(function() {
@@ -120,6 +148,7 @@ aUX.ui = (function() {
 					});
 					if (that.activeDiv.title)
 						titleBar.innerHTML = that.activeDiv.title;
+					that.hideSplash();
 				}, 100);
 				
 			}
@@ -194,6 +223,24 @@ aUX.ui = (function() {
 						return;
 					}
 					var mytransition = this.getAttribute("data-transition");
+					var dataParams=this.getAttribute("data-params");
+					//Conver the data params to a json object
+					if(dataParams)
+					{
+					   try{
+					      var tmp=dataParams.split(",");
+						  dataParams={};
+						  for(var i=0;i<tmp.length;i++)
+						  {
+						     var data=tmp[i].split(":");
+							 dataParams[data[0]]=data[1];
+						  }
+						}
+						catch(e){console.log(e);dataParams={};}
+					}
+					else
+						dataParams={};
+					var dataFunction=this.getAttribute("data-function");
 					switch (mytransition) {
 					case "up":
 						transition = "up";
@@ -215,7 +262,7 @@ aUX.ui = (function() {
 					}
 					that.loadContent(
 							this.oldhash ? this.oldhash : this.oldhref,
-							this.resetHistory, 0, transition);
+							this.resetHistory, 0, transition,{dataParams:dataParams,dataFunction:dataFunction});
 					if (this.oldonclick)
 						this.oldonclick();
 				};
@@ -234,7 +281,30 @@ aUX.ui = (function() {
 				time : "0ms"
 			});
 		},
-		loadContent : function(target, newTab, back, transition) {
+		showModal:function(id){
+			var that=this;
+			try{
+				if($am(id)){
+					var modal=$am("AMUI_modal");
+					modal.innerHTML="";
+					var button=document.createElement("div");
+					button.style.float="right";
+					button.onclick=function(){that.hideModal();}
+					button.innerHTML="[x]";
+					var content=document.createElement("div");
+					content.innerHTML=$am(id).innerHTML;
+					modal.appendChild(button);
+					modal.appendChild(content);
+					modal.style.display="block";
+				}
+			}
+			catch(e){console.log ("Error with modal - "+e);}
+		},
+		hideModal:function(){
+			$am("AMUI_modal").innerHTML="";
+			$am("AMUI_modal").style.display="none";
+		},
+		loadContent : function(target, newTab, back, transition,dataObj) {
 			
 			try {
 				what = null;
@@ -260,13 +330,21 @@ aUX.ui = (function() {
 					xmlhttp.send();
 					// show Ajax Mask
 					this.showMask();
-				} else {
+				} 
+				else {
+					
 					// load a div
 					what = target.replace("#", "");
 					what = $am(what);
+					if(!what)
+					    throw ("Target: "+target+" was not found");
 					if (what == this.activeDiv && !back)
 						return;
 
+					if(what.getAttribute("modal"))
+					{
+					   return this.showModal(what.id);
+					}
 					what.style.display = "block";
 					//fix scroller
 					if(scrollingDivs[what.id])
@@ -275,11 +353,22 @@ aUX.ui = (function() {
 					}
 					var oldHistory = [];
 					if (newTab) {
+						
 						history = [];
 						history.push({
 							target : "#" + firstDiv.id,
 							transition : "slide"
 						});
+						//Let's reposition the other elements
+						var divs=document.getElementById("content").querySelectorAll(".panel");
+						for(var kk=0;kk<divs.length;kk++)
+						{
+							if(divs[kk].id!=this.activeDiv.id)
+							{
+								css3animate(oldDiv, {x : 0,	y : 0,time : "1ms"});
+							}
+						}
+						
 					} else if (!back) {
 						history.push({
 							target : "#" + this.activeDiv.id,
@@ -334,15 +423,21 @@ aUX.ui = (function() {
 					} else
 						backButton.style.visibility = "visible";
 					this.activeDiv = what;
+					
+					//Let's check if it has a function to run to update the data
+					
+					
+					if(dataObj&&dataObj.dataFunction&&window[dataObj.dataFunction])
+					{
+					   window[dataObj.dataFunction](what,dataObj.dataParams);
+					}
 				}
 			} catch (e) {
-				console
-						.log("Error with loading content " + e + "  - "
+				console.log("Error with loading content " + e + "  - "
 								+ target);
 			}
 		},
-		setBackButtonText:function(text)
-		{
+		setBackButtonText:function(text){
 			if(this.backButtonText.length>0)
 			   backButton.innerHTML="<div>"+this.backButtonText+"</div>";
 			else
@@ -654,23 +749,5 @@ aUX.ui = (function() {
 	function $am(el) {
 		return document.getElementById(el);
 	}
-
-	function getElementsByClass(node, searchClass, tag) {
-		var classElements = new Array();
-		if (!tag)
-			tag = "*";
-		var els = node.getElementsByTagName(tag); // use "*" for all elements
-		var elsLen = els.length;
-		for (i = 0; i < elsLen; i++) {
-
-			if (els[i].className.indexOf(searchClass) != -1) {
-				classElements.push(els[i]);
-				if (els[i].getAttribute("selected"))
-					firstDiv = els[i];
-			}
-		}
-		return classElements;
-	}
-
 	return ui;
 })();
