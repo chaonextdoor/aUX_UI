@@ -288,7 +288,7 @@ aUX.ui = (function() {
 					var modal=$am("AMUI_modal");
 					modal.innerHTML="";
 					var button=document.createElement("div");
-					button.style.float="right";
+					button.style["float"]="right";
 					button.onclick=function(){that.hideModal();}
 					button.innerHTML="[x]";
 					var content=document.createElement("div");
@@ -355,10 +355,12 @@ aUX.ui = (function() {
 					if (newTab) {
 						
 						history = [];
-						history.push({
-							target : "#" + firstDiv.id,
-							transition : "slide"
-						});
+						if(what!=firstDiv){
+							history.push({
+								target : "#" + firstDiv.id,
+								transition : "slide"
+							});
+						}
 						//Let's reposition the other elements
 						var divs=document.getElementById("content").querySelectorAll(".panel");
 						for(var kk=0;kk<divs.length;kk++)
@@ -369,7 +371,7 @@ aUX.ui = (function() {
 							}
 						}
 						
-					} else if (!back) {
+					} else if (!back&&what!=firstDiv) {
 						history.push({
 							target : "#" + this.activeDiv.id,
 							transition : transition
