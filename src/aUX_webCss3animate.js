@@ -12,15 +12,15 @@ aUX.web.css3Animate = (function() {
 	   return;
 	var translateOpen = 'm11' in new WebKitCSSMatrix() ? "3d(" : "(";
 	var translateClose = 'm11' in new WebKitCSSMatrix() ? ",0)" : ")";
-	var webkitTransitionCallbacks = {};
-
+	
 	var css3Animate = function(elID, options) {
+		
 		if (typeof elID == "string" || elID instanceof String) {
 			this.el = document.getElementById(elID);
 		} else {
 			this.el = elID;
 		}
-		if (!this instanceof css3Animate) {
+		if (!(this instanceof css3Animate)) {
 			return new css3Animate(elID, options);
 		}
 		if(!this.el)
@@ -31,22 +31,22 @@ aUX.web.css3Animate = (function() {
 			alert("Please provide configuration options for animation of "+elID);
 			return;
 		}
-		this.el.addEventListener("webkitTransitionEnd", finishAnimation, false);
+		this.el.addEventListener("webkitTransitionEnd",that.finishAnimation, false);
 		
 		if (options["callback"]) {
-			this.el.callback=options["callback"];
-			this.el.moving=true;
-			window.setTimeout(function(){
-				if(that.el.moving==true&&that.el.callback&&typeof(that.el.callback=="function")){
-				that.el.moving=false;
-				that.el.callback();
-				that.el.callback="";
+			this.callback=options["callback"];
+			this.moving=true;
+			this.timeout=window.setTimeout(function(){
+				if(that.moving==true&&that.callback&&typeof(that.callback=="function")){
+				that.moving=false;
+				that.callback();
+				delete this.callback;
 				}
 			},numOnly(options["time"])+50);
 		}
 		else {
-			this.el.callback=function(){}
-			this.el.moving=false;
+			//this.callback=function(){}
+			this.moving=false;
 		}
 		
 		
@@ -104,20 +104,31 @@ aUX.web.css3Animate = (function() {
 		}		
 	};
 
-	function finishAnimation(event) {
+	
+	css3Animate.prototype={
+	   finishAnimation:function(event) {
 		event.preventDefault();
-		var that = event.target;
-		
-		if (!event.target.moving)
+		var that=this;
+		if (!this.moving)
 			return;
 		
-		event.target.moving = false;
-		
-		that.removeEventListener("webkitTransitionEnd",finishAnimation,true);
-		if (that.callback&&typeof(that.callback=="function")) {
-			that.callback();
-			that.callback="";
+		this.moving = false;
+		this.el.removeEventListener("webkitTransitionEnd",that.finishAnimation,true);
+		if (this.callback&&typeof(this.callback=="function")) {
+		    if(this.timeout)
+				window.clearTimeout(this.timeout);
+			this.callback();
+			delete this.callback;
 		}
+	   }
 	}
 	return css3Animate;
 })();
+if (!window.numOnly) {
+	function numOnly(val) {
+		if (isNaN(parseFloat(val)))
+			val = val.replace(/[^0-9.-]/, "");
+
+		return parseFloat(val);
+	}
+}

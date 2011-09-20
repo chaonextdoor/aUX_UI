@@ -22,12 +22,15 @@ input,textarea {
 	}
 
 	body > #navbar {
+		z-index:250;
 	    box-sizing: border-box;
 	    -webkit-box-sizing: border-box;
 	    border-bottom: 1px solid #2d3642;
 	    border-top: 1px solid #6d84a2;
 	    padding: 10px;
 	    height: 45px;
+		width:100%;
+		position:absolute;
 	    background-image: -webkit-gradient(
 			linear,
 			left bottom,
@@ -87,13 +90,27 @@ input,textarea {
 	CONTENT
 **********************************************************/
 	#content{
+		
+		z-index:180;
 		position: absolute;
 	    overflow: hidden;
 		left:0px;
 		right:0px;
 		top: 45px;
-		bottom: 48px;
+		bottom: 0px;
 		background: #fff;
+	}
+	
+	.modal {
+	z-index:9999;
+	position:absolute;
+	overflow:hidden;
+	left:0px;
+	top:0px;
+	height:100%;
+	width:100%;
+	background:#fff;
+	display:none;
 	}
 
 
