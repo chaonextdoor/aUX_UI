@@ -29,7 +29,7 @@ We have three special registered div blocks for your layout based off id's.  The
 * aUX_web.scroller is added automatically, along with aUX.web.appMobiSelect, aUX.web.appMobiPassword, and aUX.web.css3animate.
 
 * Linking to pages - You can link two ways.  You can link to a file by setting the URL, which will load via AJAX.  Or you can set the href property to "#div_id"
-    &lt;a href="#login"&gt;Login&lt;/a&gt;
+    <a href="#login">Login</a>
 	
 * Ajax - using AppMobi, you can do cross domain requests.  Right now, it will always load the page.  You can implement your own caching, etc.  We do NOT crawl links to add them into the history queue, etc.  When a page is loaded, you are repsonsible for the content being wired properly.
 
@@ -39,58 +39,58 @@ We have three special registered div blocks for your layout based off id's.  The
 * If you are using any of the aUX.web components (like aUX.web.carousel), you MUST declare them after the aUX.ui() function.
 
 * To open links in a new window, set the target property
-    &lt;a href="http://www.appmobi.com" target="_blank"&gt;AppMobi&lt;/a&gt;
+    <a href="http://www.appmobi.com" target="_blank">AppMobi</a>
 
 * We handle history and transitions.  You can select from six transitions by setting the data-transition property.  The default is slide.
 
-    &lt;a href="#login" data-transition="slide"&gt;Login&lt;/a&gt;  //slide left/right
-    &lt;a href="#login" data-transition="up"&gt;Login&lt;/a&gt;  //slide up/down
-    &lt;a href="#login" data-transition="down"&gt;Login&lt;/a&gt;  //slide down/up
-    &lt;a href="#login" data-transition="flip"&gt;Login&lt;/a&gt;  //Flip the page
-    &lt;a href="#login" data-transition="fade"&gt;Login&lt;/a&gt;  //Fade in/out
-    &lt;a href="#login" data-transition="pop"&gt;Login&lt;/a&gt;  //Pop in/out
+    <a href="#login" data-transition="slide">Login</a>  //slide left/right
+    <a href="#login" data-transition="up">Login</a>  //slide up/down
+    <a href="#login" data-transition="down">Login</a>  //slide down/up
+    <a href="#login" data-transition="flip">Login</a>  //Flip the page
+    <a href="#login" data-transition="fade">Login</a>  //Fade in/out
+    <a href="#login" data-transition="pop">Login</a>  //Pop in/out
 
 * To update the content of a div, you must call the function updateContentDiv(_id_,_content_);
 
-    &lt;script&gt;AMUi.updateContentDiv("login","New Login HTML");
+    <script>AMUi.updateContentDiv("login","New Login HTML");
 	
 
 * To dynamically add a new div, you can call the function addContentDiv(_id_,_content_);
 
-    &lt;script&gt;AMUi.addContentDiv("newdiv","This is some new html");
+    <script>AMUi.addContentDiv("newdiv","This is some new html");
 	
 
 * To navigate to a a page transition via javascript, you can call the function loadContent(_id_,clearHistory,backbutton,transition)
 
-    &lt;scritp&gt;AMUi.loadContent("my_id",false,false,"pop");&lt;/script&gt;
+    <scritp>AMUi.loadContent("my_id",false,false,"pop");</script>
 
 * To prevent a div from scrolling, set the property "scrolling" to "no" on the div
 
-    &lt;div class="panel" scrolling="no"&gt;
-    &lt;/div&gt;
+    <div class="panel" scrolling="no">
+    </div>
 
 * To get the current active div/page
 
-    &lt;script&gt;AMUi.activeDiv //reference to the div&lt;/script&gt;
-    &lt;script&gt;var activeId=AMUi.activeDiv.id&lt;/script&gt;
+    <script>AMUi.activeDiv //reference to the div</script>
+    <script>var activeId=AMUi.activeDiv.id</script>
 
 * To make the back button text static
 
-    &lt;script&gt;AMUi.backButtonText="Back...";&lt;/script&gt;
+    <script>AMUi.backButtonText="Back...";</script>
 
 * To change the back button text dynamically
 
-    &lt;script&gt;AMUi.setBackButtonText("Go Back");&lt;/script&gt;
+    <script>AMUi.setBackButtonText("Go Back");</script>
 
 * You can assign a javascript function to be executed and parameters by setting data properties.  The function expects paramter 1 to be the div that is being displayed and the second parameter is an object.
    This is helpful if you want to use templates to generate layouts.
-    &lt;script&gt;
+    <script>
     function getApps(targetDiv,obj)
     {
     targetDiv.innerHTML="The id called = "+obj.id+" and drawer="+obj.drawer;
     }
-	&lt;/script&gt;
-    &lt;a href="#games" data-function="getApps" data-params="id:1,drawer:2" &gt; Games &lt;/a&gt;
+	</script>
+    <a href="#games" data-function="getApps" data-params="id:1,drawer:2" > Games </a>
 	
 * Please see aUX.css for additional button colors and ways to change the theme				
 
