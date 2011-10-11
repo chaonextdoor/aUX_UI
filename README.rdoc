@@ -89,7 +89,7 @@ We have three special registered div blocks for your layout based off id's.  The
     {
     targetDiv.innerHTML="The id called = "+obj.id+" and drawer="+obj.drawer;
     }
-	</script>
+    </script>
     <a href="#games" data-function="getApps" data-params="id:1,drawer:2" > Games </a>
 	
 * Please see aUX.css for additional button colors and ways to change the theme				

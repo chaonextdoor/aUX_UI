@@ -11,105 +11,108 @@ aUX.web.appMobiPassword = function() {
 };
 
 aUX.web.appMobiPassword.prototype = {
-	oldPasswords : [],
-	showPasswordPlainText:false,
-	getOldPasswords : function(elID) {
-		if(navigator.userAgent.toLowerCase().indexOf("android")==-1&&(window.AppMobi&&AppMobi.device&&AppMobi.device.platform&&AppMobi.device.platform.toLowerCase().indexOf("android")==-1))
-		   return;
-		var container = elID && document.getElementById(elID) ? document
+    oldPasswords: [],
+    showPasswordPlainText: false,
+    getOldPasswords: function(elID) {
+        var isNotAppMobiAndroid = window.AppMobi && AppMobi.device && AppMobi.device.platform && AppMobi.device.platform.toLowerCase().indexOf("android") == -1;
+        if (isNotAppMobiAndroid === undefined)
+            isNotAppMobiAndroid = true;
+        if(navigator.userAgent.toLowerCase().indexOf("android")==-1&&(isNotAppMobiAndroid))
+           return;
+
+        var container = elID && document.getElementById(elID) ? document
 				.getElementById(elID) : document;
-		if (!container) {
-			alert("Could not find container element for appMobiPassword "
+        if (!container) {
+            alert("Could not find container element for appMobiPassword "
 					+ elID);
-			return;
-		}
-		var sels = container.getElementsByTagName("input");
+            return;
+        }
+        var sels = container.getElementsByTagName("input");
 
-		var that = this;
-		for ( var i = 0; i < sels.length; i++) {
-			if (sels[i].type != "password")
-				continue;
-			
-			this.oldPasswords[sels[i].id]=sels[i];
-			var fakeInput = document.createElement("input");
-			var selWidth = parseInt(sels[i].style.width) > 0 ? parseInt(sels[i].style.width)
+        var that = this;
+        for (var i = 0; i < sels.length; i++) {
+            if (sels[i].type != "password")
+                continue;
+
+            this.oldPasswords[sels[i].id] = sels[i];
+            var fakeInput = document.createElement("input");
+            var selWidth = parseInt(sels[i].style.width) > 0 ? parseInt(sels[i].style.width)
 					: 100;
-			var selHeight = parseInt(sels[i].style.height) > 0 ? parseInt(sels[i].style.height)
+            var selHeight = parseInt(sels[i].style.height) > 0 ? parseInt(sels[i].style.height)
 					: 20;
-			fakeInput.type = "text";
-			if(sels[i].className!=""){
-			fakeInput.style.width = selWidth + "px";
-			fakeInput.style.height = selHeight + "px";
-			fakeInput.style.backgroundColor = "white";
-			}
-			fakeInput.style.position = "relative";
-			fakeInput.style.left = "0px";
-			fakeInput.style.top = "0px";
-			fakeInput.style.zIndex = "1";
-			fakeInput.value = sels[i].value;
-			fakeInput.showPasswordPlainText=that.showPasswordPlainText;
-			fakeInput.className = sels[i].className;
-			fakeInput.id = sels[i].id + "_appMobiPassword";
-			fakeInput.placeHolder = sels[i].placeHolder;
-			var realPW = sels[i];
-			fakeInput.onkeyup = function() {
-				if (realPW.value.length != this.value.length) {
-					var theText = this.value.substring(this.selectionStart - 1,
+            fakeInput.type = "text";
+            if (sels[i].className != "") {
+                fakeInput.style.width = selWidth + "px";
+                fakeInput.style.height = selHeight + "px";
+                fakeInput.style.backgroundColor = "white";
+            }
+            fakeInput.style.position = "relative";
+            fakeInput.style.left = "0px";
+            fakeInput.style.top = "0px";
+            fakeInput.style.zIndex = "1";
+            fakeInput.value = sels[i].value;
+            fakeInput.showPasswordPlainText = that.showPasswordPlainText;
+            fakeInput.className = sels[i].className;
+            fakeInput.id = sels[i].id + "_appMobiPassword";
+            fakeInput.placeHolder = sels[i].placeHolder;
+            var realPW = sels[i];
+            fakeInput.realPW = sels[i];
+            fakeInput.onkeyup = function() {
+                if (this.realPW.value.length != this.value.length) {
+                    var theText = this.value.substring(this.selectionStart - 1,
 							this.selectionStart);
-					var oldCaret = this.selectionStart;
-					that.updatePassword(realPW, theText, this.selectionStart,
+                    var oldCaret = this.selectionStart;
+                    that.updatePassword(this.realPW, theText, this.selectionStart,
 							this.value.length);
-					if (realPW.value.length > 0&&!this.showPasswordPlainText) {
-						var oldTxt = this.value;
-						this.value = "";
-						this.value = oldTxt.replace(theText, "*");
-						if (oldCaret != this.value.length)
-							this.setSelectionRange(oldCaret, oldCaret);
-					} else if(realPW.value.length==0)
-						this.value = "";
-				}
-			};
-			sels[i].parentNode.appendChild(fakeInput);
-			sels[i].style.display = "none";
-			sels[i].parentNode.appendChild(fakeInput);
-		}
-	},
+                    if (this.realPW.value.length > 0 && !this.showPasswordPlainText) {
+                        var oldTxt = this.value;
+                        this.value = "";
+                        this.value = oldTxt.replace(theText, "*");
+                        if (oldCaret != this.value.length)
+                            this.setSelectionRange(oldCaret, oldCaret);
+                    } else if (this.realPW.value.length == 0)
+                        this.value = "";
+                }
+            };
+            sels[i].parentNode.appendChild(fakeInput);
+            sels[i].style.display = "none";
+            sels[i].parentNode.appendChild(fakeInput);
+        }
+    },
 
-	updatePassword : function(elem, val, caretPos, totalLength) {
-		if (totalLength == 0) {
-			elem.value = "";
-		}
-		if (totalLength > elem.value.length && val.length > 0) {
-			var str = elem.value;
-			elem.value = str.substring(0, caretPos - 1) + val
+    updatePassword: function(elem, val, caretPos, totalLength) {
+        if (totalLength == 0) {
+            elem.value = "";
+        }
+
+        if (totalLength > elem.value.length && val.length > 0) {
+            var str = elem.value;
+            elem.value = str.substring(0, caretPos - 1) + val
 					+ str.substring(caretPos - 1, str.length);
-		} else {
-			var str = elem.value;
-			elem.value = str.substring(0, caretPos)
+        } else {
+            var str = elem.value;
+            elem.value = str.substring(0, caretPos)
 					+ str.substring(caretPos + 1, str.length);
-		}
-	},
-	changePasswordVisiblity:function(what,id)
-	{
-		what=parseInt(what);
-		if(this.oldPasswords[id])
-		{
-			var theEl=document.getElementById(id+"_appMobiPassword");
-			if(what==1){ //show
-				this.showPasswordPlainText=true;
-				theEl.showPasswordPlainText=showPasswordPlainText=true;
-				theEl.value=this.oldPasswords[id].value;
-			}
-			else {
-				this.showPasswordPlainText=false;
-				theEl.showPasswordPlainText=showPasswordPlainText=false;
-				var pwStr="";
-				for(var i=0;i<theEl.value.length;i++)
-				{
-					pwStr+="*";
-				}
-				theEl.value=pwStr;
-			}
-		}
-	}
+        }
+    },
+    changePasswordVisiblity: function(what, id) {
+        what = parseInt(what);
+        if (this.oldPasswords[id]) {
+            var theEl = document.getElementById(id + "_appMobiPassword");
+            if (what == 1) { //show
+                this.showPasswordPlainText = true;
+                theEl.showPasswordPlainText = showPasswordPlainText = true;
+                theEl.value = this.oldPasswords[id].value;
+            }
+            else {
+                this.showPasswordPlainText = false;
+                theEl.showPasswordPlainText = showPasswordPlainText = false;
+                var pwStr = "";
+                for (var i = 0; i < theEl.value.length; i++) {
+                    pwStr += "*";
+                }
+                theEl.value = pwStr;
+            }
+        }
+    }
 };
