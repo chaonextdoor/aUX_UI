@@ -12,22 +12,7 @@ var isAppmobi=(window.AppMobi&&typeof(AppMobi)=="objcet")?true:false;
 document.addEventListener("DOMContentLoaded",function(){aUX.domFired=true;},false);
 aUX.ui = (function() {
 
-	var toolbar = "";
-	var content = "";
-	var navbar = "";
-	var backButton = "";
-	var titleBar = "";
-	var remotePages = {};
-	var history = [];
-	var homeDiv = "";
-	var screenWidth = "";
-	var css3animate = aUX.web.css3Animate;
-	var passwordBox = new aUX.web.appMobiPassword();
-	var selectBox = new aUX.web.appMobiSelect();
-	var ajaxUrl = "";
-	var transitionType = "slide";
-	var scrollingDivs = [];
-	var firstDiv = "";
+	var hasLaunched=false;
 	var ui = function() {
 		// Init the page
 		if(!aUX.domFired)
@@ -45,6 +30,22 @@ aUX.ui = (function() {
 	
 	ui.prototype = {
 		hasSplash:false,
+		titlebar:"",
+		toolbar:"",
+		navbar:"",
+		backButton:"",
+		remotePages:{},
+		history:[],
+		homeDiv:"",
+		screenWidth:"",
+		content:"",
+		css3animate:aUX.web.css3Animate,
+		passwordBox :new aUX.web.appMobiPassword(),
+		selectBox:new aUX.web.appMobiSelect(),
+		ajaxUrl :"",
+		transitionType:"slide",
+		scrollingDivs:[],
+		firstDiv:"",
 		setSplashScreen:function(url){
 			this.hasSplash=true;
 			var div=document.createElement("div");
@@ -71,44 +72,45 @@ aUX.ui = (function() {
 		activeDiv:"",
 		backButtonText:"",
 		launch:function(){
+			
 			if(this.hasLaunched==false)
 			{
 				this.hasLaunched=true;
 				return;
 			}
 			var that = this;
-			toolbar = $am("toolbar");
-			content = $am("content");
-			navbar = $am("navbar");
-			if (!toolbar) {
-				var toolbar = document.createElement("div");
-				toolbar.id = "toolbar";
-				toolbar.style.cssText = "display:none";
+			this.toolbar = $am("toolbar");
+			this.content = $am("content");
+			this.navbar = $am("navbar");
+			if (!this.toolbar) {
+				this.toolbar = document.createElement("div");
+				this.toolbar.id = "toolbar";
+				this.toolbar.style.cssText = "display:none";
 			}
-			if (!navbar) {
-				navbar = document.createElement("div");
-				navbar.id = "navbar";
-				document.body.appendChild(navbar);
+			if (!this.navbar) {
+				this.navbar = document.createElement("div");
+				this.navbar.id = "navbar";
+				document.body.appendChild(this.navbar);
 			}
-			if (!content) {
-				content = document.createElement("div");
-				content.id = "content";
-				document.body.appendChild(content);
+			if (!this.content) {
+				this.content = document.createElement("div");
+				this.content.id = "content";
+				document.body.appendChild(this.content);
 			}
-			navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'+ navbar.innerHTML;
-			backButton = $am("backButton");
-			backButton.className="button";
+			this.navbar.innerHTML = '<a id="backButton"  href="javascript:;"><div>Back</div></a> <h1 id="pageTitle"></h1>'+ navbar.innerHTML;
+			this.backButton = $am("backButton");
+			this.backButton.className="button";
 			
-			backButton.onclick = function() {		
-				if (history.length > 0) {
-					var tmpEl = history.pop();
+			this.backButton.onclick = function() {		
+				if (that.history.length > 0) {
+					var tmpEl = that.history.pop();
 					that.loadContent(tmpEl.target + "", 0, 1, tmpEl.transition);
-					transitionType = tmpEl.transition;
+					that.transitionType = tmpEl.transition;
 				}
 			
 			};
-			backButton.style.visibility = "hidden";
-			titleBar = $am("pageTitle");
+			this.backButton.style.visibility = "hidden";
+			this.titleBar = $am("pageTitle");
 			this.addContentDiv("AMUi_ajax", "");
 			var maskDiv = document.createElement("div");
 			maskDiv.id = "AMUI_mask";
@@ -122,7 +124,7 @@ aUX.ui = (function() {
 			modalDiv.id="AMUI_modal";
 			modalDiv.className="modal";
 			document.body.appendChild(modalDiv);
-			this.updateAnchors(toolbar, 1);
+			this.updateAnchors(this.toolbar, 1);
 			//this.updateAnchors(navbar);
 
 			var contentDivs=document.querySelectorAll(".panel");
@@ -130,24 +132,25 @@ aUX.ui = (function() {
 				var el = contentDivs[i];
 				var tmp = el;
 				if(tmp.getAttribute("selected"))
-					firstDiv=tmp;
+					this.firstDiv=tmp;
 				if (el.parentNode && el.parentNode.id != "content") {
 					el.parentNode.removeChild(el);
 					this.addDivAndScroll(tmp);
 				}
 			}
-			if (firstDiv) {
+			if (this.firstDiv) {
 				
+				var that=this;
 				// Fix a bug in iOS where translate3d makes the content blurry
-				this.activeDiv=firstDiv;
+				this.activeDiv=this.firstDiv;
 				window.setTimeout(function() {
 					//activeDiv = firstDiv;
-					css3animate(firstDiv, {
+					that.css3animate(that.firstDiv, {
 						x : "100%",
 						time : "0ms"
 					});
 					if (that.activeDiv.title)
-						titleBar.innerHTML = that.activeDiv.title;
+						that.titleBar.innerHTML = that.activeDiv.title;
 					that.hideSplash();
 				}, 100);
 				
@@ -177,7 +180,7 @@ aUX.ui = (function() {
 		},
 		addDivAndScroll : function(tmp) {
 		
-			content.appendChild(tmp);
+			this.content.appendChild(tmp);
 			var addScroller=true;
 			if(tmp.getAttribute("scrolling")&&tmp.getAttribute("scrolling").toLowerCase()=="no")
 			   addScroller=false;
@@ -188,10 +191,10 @@ aUX.ui = (function() {
 			tmp.innerHTML = "";
 			tmp.appendChild(myDiv);
 			this.updateAnchors(myDiv);
-			selectBox.getOldSelects(tmp.id);
-			passwordBox.getOldPasswords(tmp.id);
+			this.selectBox.getOldSelects(tmp.id);
+			this.passwordBox.getOldPasswords(tmp.id);
 			if(addScroller){
-				scrollingDivs[tmp.id]=(aUX.web.scroller(myDiv, {
+				this.scrollingDivs[tmp.id]=(aUX.web.scroller(myDiv, {
 					scrollBars : true,
 					verticalScroll : true,
 					horizontalScroll : false,
@@ -270,13 +273,13 @@ aUX.ui = (function() {
 
 		},
 		updateOrientation : function(event) {
-			for ( var i = 0; i < scrollingDivs.length; i++) {
-				scrollingDivs[i].scrollTo({
+			for ( var i = 0; i < this.scrollingDivs.length; i++) {
+				this.scrollingDivs[i].scrollTo({
 					x : 0,
 					y : 0
 				});
 			}
-			css3animate(this.activeDiv, {
+			this.css3animate(this.activeDiv, {
 				x : "100%",
 				time : "0ms"
 			});
@@ -312,7 +315,7 @@ aUX.ui = (function() {
 				that.hideMask();
 				if (target.indexOf("#") == -1) {
 					// XML Request
-					if (this.activeDiv.id == "AMUi_ajax" && target == ajaxUrl)
+					if (this.activeDiv.id == "AMUi_ajax" && target == this.ajaxUrl)
 						return;
 					if (target.indexOf("http") == -1)
 						target = AppMobi.webRoot + target;
@@ -347,17 +350,17 @@ aUX.ui = (function() {
 					}
 					what.style.display = "block";
 					//fix scroller
-					if(scrollingDivs[what.id])
+					if(this.scrollingDivs[what.id])
 					{
-						scrollingDivs[what.id].scrollTo({x : 0,y : 0});
+						this.scrollingDivs[what.id].scrollTo({x : 0,y : 0});
 					}
 					var oldHistory = [];
 					if (newTab) {
 						
-						history = [];
-						if(what!=firstDiv){
-							history.push({
-								target : "#" + firstDiv.id,
+						this.history = [];
+						if(what!=this.firstDiv){
+							this.history.push({
+								target : "#" + this.firstDiv.id,
 								transition : "slide"
 							});
 						}
@@ -367,18 +370,18 @@ aUX.ui = (function() {
 						{
 							if(divs[kk].id!=this.activeDiv.id)
 							{
-								css3animate(oldDiv, {x : 0,	y : 0,time : "1ms"});
+								this.css3animate(oldDiv, {x : 0,	y : 0,time : "1ms"});
 							}
 						}
 						
-					} else if (!back&&what!=firstDiv) {
-						history.push({
+					} else if (!back&&what!=this.firstDiv) {
+						this.history.push({
 							target : "#" + this.activeDiv.id,
 							transition : transition
 						});
 
 					}
-					transitionType = transition;
+					this.transitionType = transition;
 					var oldDiv = this.activeDiv;
 					var currWhat = what;
 
@@ -403,8 +406,8 @@ aUX.ui = (function() {
 					}
 
 					if (back) {
-						if (history.length > 0) {
-							var val = history[history.length - 1];
+						if (this.history.length > 0) {
+							var val = this.history[history.length - 1];
 							var el = $am(val.target.replace("#", ""));
 							this.setBackButtonText(el.title)
 						}
@@ -413,17 +416,17 @@ aUX.ui = (function() {
 					else
 						this.setBackButtonText("Back");
 					if (what.title) {
-						titleBar.innerHTML = what.title;
+						this.titleBar.innerHTML = what.title;
 					}
 					if (newTab) {
-						this.setBackButtonText(firstDiv.title)
+						this.setBackButtonText(this.firstDiv.title)
 					}
 
 					if (history.length == 0) {
-						backButton.style.visibility = "hidden";
-						history = [];
+						this.backButton.style.visibility = "hidden";
+						this.history = [];
 					} else
-						backButton.style.visibility = "visible";
+						this.backButton.style.visibility = "visible";
 					this.activeDiv = what;
 					
 					//Let's check if it has a function to run to update the data
@@ -441,9 +444,9 @@ aUX.ui = (function() {
 		},
 		setBackButtonText:function(text){
 			if(this.backButtonText.length>0)
-			   backButton.innerHTML="<div>"+this.backButtonText+"</div>";
+			   this.backButton.innerHTML="<div>"+this.backButtonText+"</div>";
 			else
-				backButton.innerHTML="<div>"+text+"</div>";
+				this.backButton.innerHTML="<div>"+text+"</div>";
 		},
 		showMask : function() {
 			$am("AMUI_mask").style.display = "block";
@@ -452,31 +455,32 @@ aUX.ui = (function() {
 			$am("AMUI_mask").style.display = "none";
 		},
 		slideTransition : function(oldDiv, currDiv, back) {
+		var that=this
 			if (back) {
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "200%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							time : "1ms"
 						});
 					}
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					time : "200ms"
 				});
 			} else {
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "0%",
 					time : "200ms"
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "200%",
 					time : "1ms",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							x : "100%",
 							time : "200ms"
 						});
@@ -486,18 +490,19 @@ aUX.ui = (function() {
 		},
 		slideUpTransition : function(oldDiv, currDiv, back) {
 
+			var that=this;
 			if (back) {
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					y : "0%",
 					time : "1ms"
 				});
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					y : "100%",
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
@@ -509,23 +514,23 @@ aUX.ui = (function() {
 			} else {
 				oldDiv.style.zIndex = 1;
 				currDiv.style.zIndex = 2;
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
 						});
 					}
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					y : "100%",
 					x : "100%",
 					time : "1ms",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							y : "0%",
 							x : "100%",
 							time : "200ms"
@@ -535,19 +540,19 @@ aUX.ui = (function() {
 			}
 		},
 		slideDownTransition : function(oldDiv, currDiv, back) {
-
+			var that=this
 			if (back) {
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					y : "0%",
 					time : "1ms"
 				});
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					y : "-100%",
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
@@ -559,23 +564,23 @@ aUX.ui = (function() {
 			} else {
 				oldDiv.style.zIndex = 1;
 				currDiv.style.zIndex = 2;
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
 						});
 					}
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					y : "-100%",
 					x : "100%",
 					time : "1ms",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							y : "0%",
 							x : "100%",
 							time : "200ms"
@@ -585,26 +590,27 @@ aUX.ui = (function() {
 			}
 		},
 		flipTransition : function(oldDiv, currDiv, back) {
+			var that=this
 			if (back) {
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "200%",
 					time : "1ms",
 					scale : .8,
 					rotateY : "180deg",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							x : "100%",
 							time : "200ms"
 						});
 					}
 				});
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "200%",
 					time : "200ms",
 					scale : .8,
 					rotateY : "180deg",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							time : "1ms",
 							opacity : 1
@@ -616,26 +622,26 @@ aUX.ui = (function() {
 			} else {
 				oldDiv.style.zIndex = 1;
 				currDiv.style.zIndex = 2;
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "200%",
 					time : "200ms",
 					scale : '.8',
 					rotateY : "180deg",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
 						});
 					}
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "200%",
 					time : "1ms",
 					scale : .8,
 					rotateY : "180deg",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							x : "100%",
 							time : "200ms"
 						});
@@ -644,17 +650,18 @@ aUX.ui = (function() {
 			}
 		},
 		fadeTransition : function(oldDiv, currDiv, back) {
+			var that=this
 			if (back) {
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					time : "1ms"
 				});
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					opacity : .1,
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							time : "1ms",
 							opacity : 1
@@ -666,11 +673,11 @@ aUX.ui = (function() {
 			} else {
 				oldDiv.style.zIndex = 1;
 				currDiv.style.zIndex = 2;
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
@@ -678,11 +685,11 @@ aUX.ui = (function() {
 					}
 				});
 				currDiv.style.opacity = 0;
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					time : "1ms",
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							x : "100%",
 							time : "200ms",
 							opacity : 1
@@ -692,20 +699,20 @@ aUX.ui = (function() {
 			}
 		},
 		popTransition : function(oldDiv, currDiv, back) {
-
+			var that=this
 			if (back) {
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					time : "1ms"
 				});
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					opacity : .1,
 					scale : .2,
 					origin : "50% 50%",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							time : "1ms"
 						});
@@ -716,18 +723,18 @@ aUX.ui = (function() {
 			} else {
 				oldDiv.style.zIndex = 1;
 				currDiv.style.zIndex = 2;
-				css3animate(oldDiv, {
+				that.css3animate(oldDiv, {
 					x : "100%",
 					time : "200ms",
 					callback : function() {
-						css3animate(oldDiv, {
+						that.css3animate(oldDiv, {
 							x : 0,
 							y : 0,
 							time : "1ms"
 						});
 					}
 				});
-				css3animate(currDiv, {
+				that.css3animate(currDiv, {
 					x : "100%",
 					y : "0%",
 					time : "1ms",
@@ -735,7 +742,7 @@ aUX.ui = (function() {
 					origin : "50% 50%",
 					opacity : .1,
 					callback : function() {
-						css3animate(currDiv, {
+						that.css3animate(currDiv, {
 							x : "100%",
 							time : "200ms",
 							scale : 1,
