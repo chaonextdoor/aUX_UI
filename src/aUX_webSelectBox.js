@@ -13,8 +13,8 @@ aUX.web.appMobiSelect.prototype = {
         var isNotAppMobiAndroid = window.AppMobi && AppMobi.device && AppMobi.device.platform && AppMobi.device.platform.toLowerCase().indexOf("android") == -1;
         if (isNotAppMobiAndroid === undefined)
             isNotAppMobiAndroid = true;
-        //		if(navigator.userAgent.toLowerCase().indexOf("android")==-1&&(isNotAppMobiAndroid))
-        //			return;
+        		if(navigator.userAgent.toLowerCase().indexOf("android")==-1&&(isNotAppMobiAndroid))
+        			return;
         if (!aUX.web.scroller) {
             alert("This library requires aUX_web scroller");
             return;

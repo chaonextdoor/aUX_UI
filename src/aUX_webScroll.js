@@ -17,6 +17,7 @@ aUX.web.scroller = (function() {
 	var touchStarted=false;
 
 	var scroller = function(elID, opts) {
+		
 		if (typeof elID == "string" || elID instanceof String) {
 			this.el = document.getElementById(elID);
 		} else {
@@ -115,9 +116,9 @@ aUX.web.scroller = (function() {
 		startLeft : 0,
 		rightMargin : 0,
 		divWidth : 0,
+		refresh:false,
+		refreshFunction:null,
 		
-		
-
 		// handle the moving function
 		touchMove : function(event) {
 			try {
@@ -230,6 +231,15 @@ aUX.web.scroller = (function() {
 						// access to
 						return;
 				}
+				//Add the pull to refresh text.  Not optimal but keeps from others overwriting the content and worrying about italics
+				
+			if(this["refresh"]&&this["refresh"]==true&&document.getElementById(this.el.id+"_pulldown")==null){
+				//add the refresh div
+				var text="<div id='"+this.el.id+"_pulldown' style='	border-radius:.6em;border: 1px solid #2A2A2A;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#666666),color-stop(1,#222222));background:#222222;margin:0px;height:60px;top:0px;left:5px;right:10px;position:absolute;-webkit-transform: translate3d(0, -65px, 0);top:0,left:0,right:0;text-align:center;line-height:60px;color:white;'>Pull to Refresh</div>";
+				this.el.innerHTML=text+this.el.innerHTML;
+			}
+
+				
 				this.timeMoved = 0;
 				this.vdistanceMoved = 0;
 				this.hdistanceMoved = 0;
@@ -340,6 +350,7 @@ aUX.web.scroller = (function() {
 
 					var move = numOnly(new WebKitCSSMatrix(window
 							.getComputedStyle(this.el).webkitTransform).f);
+					var moveY=move;
 					if (move < 0)
 						move = move - newDist;
 
@@ -379,6 +390,12 @@ aUX.web.scroller = (function() {
 					scrollPoints.x = move;
 				}
 				var that=this;
+				if(this["refresh"]&&moveY>60){
+					if(this["refreshFunction"])
+					{
+						this.refreshFunction.call();
+					}
+				}
 				this.scrollerMoveCSS(this.finishScrollingObject, scrollPoints,
 						300, "ease-out");
 				if (this.vscrollBar) {
@@ -427,8 +444,10 @@ aUX.web.scroller = (function() {
 			el.style.webkitTransitionTimingFunction = timingFunction;
 		},
 
-		scrollTo : function(pos) {
-			this.scrollerMoveCSS(this.el, pos, 0);
+		scrollTo : function(pos,time) {
+			if(!time)
+			  time=0;
+			this.scrollerMoveCSS(this.el, pos, time);
 		}
 	};
 	return scroller;

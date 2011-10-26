@@ -31,10 +31,16 @@ We have three special registered div blocks for your layout based off id's.  The
 * Linking to pages - You can link two ways.  You can link to a file by setting the URL, which will load via AJAX.  Or you can set the href property to "#div_id"
     <a href="#login">Login</a>
 	
-* Ajax - using AppMobi, you can do cross domain requests.  Right now, it will always load the page.  You can implement your own caching, etc.  We do NOT crawl links to add them into the history queue, etc.  When a page is loaded, you are repsonsible for the content being wired properly.
-
+* Ajax - using AppMobi, you can do cross domain requests.   We will crawl the pages and wire any links found.  We added new features to add the content to the dom, force refresh and more.
+ 
 
 == Tips
+
+* Ajax - you can add an ajax request into the DOM that will be accessible by the URL referenced by setting the data-persist attribute.  You can force a refresh by setting data-refresh-ajax="true".  You can also make the scroller "pull to refresh" by setting data-pull-scroller="true"
+    <a href="http://www.appmobi.com" data-persist="true">AppMobi</a>  //Div will be added to the dom
+    <a href="http://www.appmobi.com" data-persist="true" data-refresh-ajax="true">AppMobi</a>  //Everytime the link is clicked, it will fetch the data
+    <a href="http://www.appmobi.com" data-pull-scroller="true">AppMobi</a>  //When the scroller content is pulled down, it will refresh the page
+	
 
 * If you are using any of the aUX.web components (like aUX.web.carousel), you MUST declare them after the aUX.ui() function.
 
