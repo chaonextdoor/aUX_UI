@@ -127,13 +127,20 @@ aUX.ui = (function () {
             for (var i = 0; i < contentDivs.length; i++) {
                 var el = contentDivs[i];
                 var tmp = el;
-                if (tmp.getAttribute("selected"))
-                    this.firstDiv = tmp;
                 if (el.parentNode && el.parentNode.id != "content") {
                     el.parentNode.removeChild(el);
                     this.addDivAndScroll(tmp);
                 }
             }
+			//Needed because of how we have to add scrollers
+    		 var contentDivs = document.querySelectorAll(".panel");
+            for (var i = 0; i < contentDivs.length; i++) {
+                var el = contentDivs[i];
+                var tmp = el;
+                if (tmp.getAttribute("selected"))
+                    this.firstDiv = tmp;
+            }
+			
             if (this.firstDiv) {
 
                 var that = this;
@@ -178,21 +185,27 @@ aUX.ui = (function () {
         },
         addDivAndScroll: function (tmp, refreshPull, refreshFunc) {
 
-            this.content.appendChild(tmp);
+            
             var addScroller = true;
             if (tmp.getAttribute("scrolling") && tmp.getAttribute("scrolling").toLowerCase() == "no")
+			
                 addScroller = false;
-            var myDiv = document.createElement("div");
-
-            myDiv.innerHTML = tmp.innerHTML;
-            myDiv.innerHTML += "<Br>"; // this helps with the bottom margin
-            tmp.innerHTML = "";
-            tmp.appendChild(myDiv);
-            this.updateAnchors(myDiv);
-            this.selectBox.getOldSelects(tmp.id);
-            this.passwordBox.getOldPasswords(tmp.id);
+			if(!addScroller){
+			 this.content.appendChild(tmp);
+			 return this.updateAnchors(tmp);
+			}
+			//WE need to clone the div so we keep events
+            var myDiv = tmp.cloneNode(false);
+			tmp.title="";
+			tmp.id="";
+			tmp.className="";
+			myDiv.appendChild(tmp);
+			this.content.appendChild(myDiv);
+            this.updateAnchors(tmp);
+            this.selectBox.getOldSelects(myDiv.id);
+            this.passwordBox.getOldPasswords(myDiv.id);
             if (addScroller) {
-                this.scrollingDivs[tmp.id] = (aUX.web.scroller(myDiv, {
+                this.scrollingDivs[myDiv.id] = (aUX.web.scroller(tmp, {
                     scrollBars: true,
                     verticalScroll: true,
                     horizontalScroll: false,
