@@ -8,7 +8,7 @@
 if (!window.aUX)
 	aUX = {};
 aUX.domFired=false;
-var isAppmobi=(window.AppMobi&&typeof(AppMobi)=="objcet")?true:false;
+
 document.addEventListener("DOMContentLoaded",function(){aUX.domFired=true;},false);
 aUX.ui = (function () {
 
@@ -29,6 +29,7 @@ aUX.ui = (function () {
 
     ui.prototype = {
         hasSplash: false,
+		isAppMobi:false,
         titlebar: "",
         toolbar: "",
         navbar: "",
@@ -75,6 +76,7 @@ aUX.ui = (function () {
                 return;
             }
             var that = this;
+			this.isAppMobi=(window.AppMobi&&typeof(AppMobi)=="object")?true:false;
             this.toolbar = $am("toolbar");
             this.content = $am("content");
             this.navbar = $am("navbar");
@@ -220,7 +222,19 @@ aUX.ui = (function () {
             var that = this;
             var theTransition;
             for (var i = 0; i < anchors.length; i++) {
-                if (anchors[i].href.indexOf("javascript:") != -1) {
+                if (anchors[i].href.indexOf(":") != -1&&((anchors[i].href.indexOf("http:")!=0&&anchors[i].href.indexOf("https:")!=0)||anchors[i].href.indexOf("http://maps.google.com/maps")!=-1)&&anchors[i].href.indexOf("javascript:")==-1) { //allow execution of tel: and protocol handlers
+					
+					anchors[i].oldonclick=anchors[i].onclick;
+					anchors[i].oldhref=anchors[i].href;
+					anchors[i].href="javascript:;";
+					anchors[i].onclick=function(){
+						if(that.isAppMobi)
+						   AppMobi.device.launchExternal(this.oldhref);
+						else
+							window.open(this.oldhref);
+						if(typeof(this.oldonclick)=="function")
+						   this.oldonclick();  
+					}
                     continue;
                 }
                 anchors[i].oldhref = anchors[i].href;
@@ -238,8 +252,7 @@ aUX.ui = (function () {
                     this.touchStarted = false;
                     var transition = "slide";
                     if (this.target && this.target != "") {
-
-                        if (AppMobi.device && AppMobi.device.showRemoteSite)
+                        if (that.isAppMobi)
                             AppMobi.device.showRemoteSite(this.oldhref);
                         else {
                             window.open(this.oldhref);
